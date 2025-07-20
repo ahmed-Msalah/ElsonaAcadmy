@@ -8,7 +8,7 @@ const getAllUsers = async (req, res) => {
 
     if (user.role !== 'admin') res.status(401).json({ message: 'Forbeddin' });
 
-    const users = await User.find();
+    const users = await User.find().select('-role');
 
     if (users.length === 0) {
       return res.status(404).json({ message: 'No students found' });
@@ -105,7 +105,7 @@ const changePassword = async (req, res) => {
 const getStudentProfile = async (req, res) => {
   try {
     const { user } = req;
-    const userData = await User.findById(user.id);
+    const userData = await User.findById(user.id).select('-role');
     if (!userData) return res.status(404).json({ message: 'Student not found' });
     res.status(200).json({ userData });
   } catch (error) {
