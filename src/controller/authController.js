@@ -7,7 +7,7 @@ const createAccount = async (req, res) => {
   try {
     const { firstName, lastName, userName, email, password, phoneNumber, birthDate, gender } = req.body;
 
-    if (!firstName || !lastName || !userName || !email || !password) {
+    if (!firstName || !lastName || !userName || !email || !password || gender || birthDate) {
       return res.status(400).json({ message: 'All fields are required' });
     }
 
@@ -57,7 +57,7 @@ const login = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found.' });
+      return res.status(404).json({ message: 'Student not found.' });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -89,7 +89,7 @@ const requestPasswordReset = async (req, res) => {
     const { email } = req.body;
 
     const user = await User.findOne({ email });
-    if (!user) return res.status(404).json({ message: 'User not found' });
+    if (!user) return res.status(404).json({ message: 'Student not found' });
 
     // Generate a 6-digit reset code
     const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
@@ -114,13 +114,13 @@ const verifyResetCode = async (req, res) => {
     const { id, code } = req.body;
 
     if (!id || !code) {
-      return res.status(400).json({ message: 'User ID and verification code are required.' });
+      return res.status(400).json({ message: 'student ID and verification code are required.' });
     }
 
     const user = await User.findById(id);
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found.' });
+      return res.status(404).json({ message: 'Student not found.' });
     }
 
     if (new Date() > user.resetPasswordExpires) {
@@ -149,13 +149,13 @@ const resetPassword = async (req, res) => {
     const { id, newPassword } = req.body;
 
     if (!id || !newPassword) {
-      return res.status(400).json({ message: 'User ID and New Password  are required.' });
+      return res.status(400).json({ message: 'Student ID and New Password  are required.' });
     }
 
     const user = await User.findById(id);
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found.' });
+      return res.status(404).json({ message: 'Student not found.' });
     }
 
     if (!user.resetPasswordVerified) {
