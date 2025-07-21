@@ -7,7 +7,7 @@ const createAccount = async (req, res) => {
   try {
     const { firstName, lastName, userName, email, password, phoneNumber, birthDate, gender } = req.body;
 
-    if (!firstName || !lastName || !userName || !email || !password || gender || birthDate) {
+    if (!firstName || !lastName || !userName || !email || !password || !gender || !birthDate) {
       return res.status(400).json({ message: 'All fields are required' });
     }
 
