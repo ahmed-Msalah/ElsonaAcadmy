@@ -5,9 +5,9 @@ const { generateToken } = require('../service/generateToken.service.js');
 
 const createAccount = async (req, res) => {
   try {
-    const { firstName, lastName, userName, email, password, phoneNumber, birthDate, gender } = req.body;
+    const { name, userName, email, password, phoneNumber, birthDate, gender } = req.body;
 
-    if (!firstName || !lastName || !userName || !email || !password || !gender || !birthDate) {
+    if (!name || !userName || !email || !password || !gender || !birthDate) {
       return res.status(400).json({ message: 'All fields are required' });
     }
 
@@ -23,8 +23,7 @@ const createAccount = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = new User({
-      firstName,
-      lastName,
+      name,
       userName,
       email,
       password: hashedPassword,

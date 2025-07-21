@@ -1,9 +1,7 @@
 const express = require('express');
 const {
   createAccount,
-  verifyEmail,
   login,
-  resendVerficationCode,
   requestPasswordReset,
   verifyResetCode,
   resetPassword,
