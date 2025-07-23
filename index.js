@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const authRouter = require('./src/routes/auth.route.js');
 const userRouter = require('./src/routes/user.route.js');
+const adminRouter = require('./src/routes/admin.route.js');
 const bodyParser = require('body-parser');
 
 dotenv.config();
@@ -15,6 +16,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
+app.use('/api/v1/admin', adminRouter);
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/students', userRouter);
 app.use((req, res, next) => {

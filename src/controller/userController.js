@@ -5,9 +5,6 @@ const bcrypt = require('bcrypt');
 const getAllUsers = async (req, res) => {
   try {
     const { user } = req;
-
-    if (user.role !== 'admin') res.status(401).json({ message: 'Forbeddin' });
-
     const users = await User.find().select('-role');
 
     if (users.length === 0) {
@@ -22,13 +19,9 @@ const getAllUsers = async (req, res) => {
 
 const getUserById = async (req, res) => {
   try {
-    const { user } = req;
-
-    if (user.id === req.params.id || user.role === 'admin') {
-      const userData = await User.findById(req.params.id);
-      if (!userData) return res.status(404).json({ message: 'Student not found' });
-      res.status(200).json({ userData });
-    } else res.status(401).json({ message: 'Forbeddin' });
+    const userData = await User.findById(req.params.id);
+    if (!userData) return res.status(404).json({ message: 'Student not found' });
+    res.status(200).json({ userData });
   } catch (error) {
     res.status(500).json({ message: 'Server error', EROOOOR: error.message });
   }
@@ -37,10 +30,6 @@ const getUserById = async (req, res) => {
 const updateUserById = async (req, res) => {
   try {
     const id = req.params.id;
-    const { user } = req;
-
-    if (user.id !== id && user.role !== 'admin') res.status(401).json({ message: 'Forbeddin' });
-
     const updatedUser = await User.findByIdAndUpdate(id, req.body, {
       new: true,
       runValidators: true,
