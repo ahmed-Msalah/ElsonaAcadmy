@@ -5,7 +5,7 @@ const authRouter = require('./src/routes/auth.route.js');
 const userRouter = require('./src/routes/user.route.js');
 const adminRouter = require('./src/routes/admin.route.js');
 const bodyParser = require('body-parser');
-
+const cors = require('cors');
 dotenv.config();
 
 const app = express();
