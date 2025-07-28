@@ -1,25 +1,25 @@
 const User = require('../models/user.model.js');
+const Level = require('../models/level.model.js');
 const bcrypt = require('bcrypt');
-const { sendVerificationEmail, resendVerificationEmail, sendResetCodeEmail } = require('../service/email.service.js');
+const {
+  sendVerificationEmail,
+  resendVerificationEmail,
+  sendResetCodeEmail,
+} = require('../service/email.service.js');
 const { generateToken } = require('../service/generateToken.service.js');
 
 const createAccount = async (req, res) => {
   try {
+    const levelOne = await Level.findOne({ levelNumber: 1 });
+    if (!levelOne) {
+      return res.status(500).json({ status: 500, message: 'Default level not found' });
+    }
     const { name, userName, email, password, phoneNumber, birthDate, gender } = req.body;
 
     if (!name || !userName || !email || !password || !gender || !birthDate) {
       return res.status(400).json({ message: 'All fields are required' });
     }
 
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(409).json({ message: 'Email already used' });
-    }
-
-    const existingUserName = await User.findOne({ userName });
-    if (existingUserName) {
-      return res.status(409).json({ message: 'Username already used' });
-    }
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = new User({
@@ -30,6 +30,7 @@ const createAccount = async (req, res) => {
       phoneNumber,
       gender,
       birthDate,
+      currentLevelId: levelOne.id,
     });
 
     const createdUser = await newUser.save();
@@ -53,7 +54,10 @@ const login = async (req, res) => {
       return res.status(400).json({ message: 'Email and password are required.' });
     }
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).populate({
+      path: 'currentLevelId',
+      select: 'levelNumber',
+    });
 
     if (!user) {
       return res.status(404).json({ message: 'Student not found.' });
@@ -71,14 +75,13 @@ const login = async (req, res) => {
       message: 'Login successful!',
       token,
       data: {
-        id: user.id,
+        id: user._id,
         name: user.name,
-        userName: user.userName,
         email: user.email,
         phoneNumber: user.phoneNumber,
         gender: user.gender,
-        birthDate: user.birthDate,
-        role: user.role,
+        birthDate: user.birthDate.toISOString().split('T')[0],
+        currentLevel: user.currentLevelId.levelNumber,
       },
     });
   } catch (error) {
@@ -106,7 +109,9 @@ const requestPasswordReset = async (req, res) => {
     // Send the code via email
     await sendResetCodeEmail(user.email, user.userName, resetCode);
 
-    return res.status(200).json({ message: 'Password reset code sent to your email', userId: user.id });
+    return res
+      .status(200)
+      .json({ message: 'Password reset code sent to your email', userId: user.id });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

@@ -4,13 +4,15 @@ const completionConditionSchema = new mongoose.Schema(
   {
     type: {
       type: String,
-      enum: ['exam'],
+      enum: ['exam', 'auto'], // ✅ دعم النوعين
       required: true,
     },
     examId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Exam',
-      required: true,
+      required: function () {
+        return this.type === 'exam'; // ✅ مطلوب فقط لو النوع "exam"
+      },
     },
   },
   { _id: false },
@@ -39,10 +41,10 @@ const lectureSchema = new mongoose.Schema(
     },
     completionCondition: {
       type: completionConditionSchema,
-      required: false,
+      required: false, // ✅ لأنها optional في حالة auto
     },
   },
   { timestamps: true },
 );
-
-module.exports = mongoose.model('Lecture', lectureSchema);
+const Lecture = new mongoose.model('Lecture', lectureSchema);
+module.exports = Lecture;

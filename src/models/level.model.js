@@ -4,10 +4,11 @@ const levelSchema = new mongoose.Schema(
     levelNumber: {
       type: Number,
       required: true,
+      unique: true,
+      index: true,
     },
     title: { type: String, required: true },
     description: { type: String, required: true },
-    createdAt: { type: Date, default: Date.now },
   },
   {
     strict: true,

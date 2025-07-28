@@ -1,4 +1,5 @@
 const Lecture = require('../models/lecture.model');
+const CompletedLecture = require('../models/CompletedLecture.model');
 
 const getAllLectures = async (req, res) => {
   try {
@@ -69,9 +70,28 @@ const deleteLecture = async (req, res) => {
   }
 };
 
+const markLectureComplete = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const lectureId = req.params.lectureId;
+
+    // Prevent duplicate
+    const exists = await CompletedLecture.findOne({ userId, lectureId });
+    if (exists) {
+      return res.status(200).json({ status: 200, message: 'Lecture already marked as complete' });
+    }
+
+    await CompletedLecture.create({ userId, lectureId });
+    res.status(200).json({ status: 200, message: 'Lecture marked as complete' });
+  } catch (error) {
+    res.status(500).json({ status: 500, message: 'Server error', error });
+  }
+};
+
 module.exports = {
   getAllLectures,
   createLecture,
   updateLecture,
   deleteLecture,
+  markLectureComplete,
 };

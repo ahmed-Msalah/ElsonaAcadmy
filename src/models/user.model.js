@@ -9,11 +9,13 @@ const userSchema = new mongoose.Schema(
     userName: {
       type: String,
       required: true,
+      uniqe: true,
     },
 
     email: {
       type: String,
       required: true,
+      uniqe: true,
     },
 
     password: {
@@ -34,9 +36,10 @@ const userSchema = new mongoose.Schema(
     resetPasswordCode: { type: String },
     resetPasswordExpires: { type: Date },
     resetPasswordVerified: { type: Boolean, default: false },
-    createdAt: {
-      type: Date,
-      default: Date.now,
+    currentLevelId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Level',
+      required: true,
     },
   },
   { timestamps: true },
