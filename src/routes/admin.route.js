@@ -1,5 +1,13 @@
 const express = require('express');
 const Router = express.Router();
+const {
+  getAllAdmins,
+  createAdmin,
+  deleteAdmin,
+  getStudentDetailedReport,
+  getAllStudentsProgressReports,
+  getDashboardStatistics,
+} = require('../controller/adminController');
 const { getUserById, updateUserById, getAllUsers } = require(`../controller/userController.js`);
 const {
   getAllLevels,
@@ -60,4 +68,17 @@ Router.route('/lectures')
 Router.route('/lectures/:id')
   .put(authenticateToken, isAdmin, updateLecture)
   .delete(authenticateToken, isAdmin, deleteLecture);
+//adminRoutes
+Router.route('/admins')
+  .get(authenticateToken, isAdmin, getAllAdmins)
+  .post(authenticateToken, isAdmin, createAdmin);
+Router.route('/admins/:adminId').delete(authenticateToken, isAdmin, deleteAdmin);
+
+// Get Student Detailed Report
+Router.get('/students/:studentId/report', authenticateToken, getStudentDetailedReport);
+// Get All Students Progress Reports
+Router.get('/reports', authenticateToken, isAdmin, getAllStudentsProgressReports);
+// Dashboard Statistics
+Router.get('/dashboard', authenticateToken, isAdmin, getDashboardStatistics);
+
 module.exports = Router;

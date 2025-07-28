@@ -11,7 +11,7 @@ const Exam = require('../models/exam.model');
 const getAllUsers = async (req, res) => {
   try {
     const { user } = req;
-    const users = await User.find().select('-role');
+    const users = await User.find({ role: 'student' }).select('-role -password -__v');
 
     if (users.length === 0) {
       return res.status(404).json({ message: 'No students found' });
@@ -25,7 +25,7 @@ const getAllUsers = async (req, res) => {
 
 const getUserById = async (req, res) => {
   try {
-    const userData = await User.findById(req.params.id);
+    const userData = await User.findById(req.params.id).select('-role -password -__v');
     if (!userData) return res.status(404).json({ message: 'Student not found' });
     res.status(200).json({ userData });
   } catch (error) {
@@ -39,7 +39,7 @@ const updateUserById = async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(id, req.body, {
       new: true,
       runValidators: true,
-    });
+    }).select('-role -password -__v');
 
     console.log('upated user data', updatedUser);
 

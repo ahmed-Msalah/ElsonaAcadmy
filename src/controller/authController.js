@@ -70,7 +70,21 @@ const login = async (req, res) => {
     }
 
     const token = generateToken(user);
-
+    if (user.role === 'student') {
+      res.status(200).json({
+        message: 'Login successful!',
+        token,
+        data: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          phoneNumber: user.phoneNumber,
+          gender: user.gender,
+          birthDate: user.birthDate ? new Date(user.birthDate).toISOString().split('T')[0] : null,
+          currentLevel: user.currentLevelId.levelNumber,
+        },
+      });
+    }
     res.status(200).json({
       message: 'Login successful!',
       token,
@@ -80,8 +94,7 @@ const login = async (req, res) => {
         email: user.email,
         phoneNumber: user.phoneNumber,
         gender: user.gender,
-        birthDate: user.birthDate.toISOString().split('T')[0],
-        currentLevel: user.currentLevelId.levelNumber,
+        birthDate: user.birthDate ? new Date(user.birthDate).toISOString().split('T')[0] : null,
       },
     });
   } catch (error) {

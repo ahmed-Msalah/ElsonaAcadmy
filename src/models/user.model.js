@@ -22,8 +22,8 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    birthDate: { type: Date, required: true },
-    phoneNumber: { type: String, required: true },
+    birthDate: { type: Date, required: false },
+    phoneNumber: { type: String, required: false },
     gender: {
       type: String,
       enum: ['male', 'female'],
@@ -39,7 +39,7 @@ const userSchema = new mongoose.Schema(
     currentLevelId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Level',
-      required: true,
+      required: false,
     },
   },
   { timestamps: true },
