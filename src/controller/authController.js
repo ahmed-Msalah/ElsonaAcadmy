@@ -38,7 +38,18 @@ const createAccount = async (req, res) => {
 
     res.status(201).json({
       message: 'Account created successfully',
-      data: { id: createdUser.id, token },
+      data: {
+        id: createdUser._id,
+        name: createdUser.name,
+        email: createdUser.email,
+        phoneNumber: createdUser.phoneNumber,
+        gender: createdUser.gender,
+        birthDate: createdUser.birthDate
+          ? new Date(createdUser.birthDate).toISOString().split('T')[0]
+          : null,
+        currentLevel: createdUser.currentLevelId.levelNumber,
+        role: createdUser.role,
+      },
     });
   } catch (error) {
     console.error('Error creating account:', error);
@@ -82,6 +93,7 @@ const login = async (req, res) => {
           gender: user.gender,
           birthDate: user.birthDate ? new Date(user.birthDate).toISOString().split('T')[0] : null,
           currentLevel: user.currentLevelId.levelNumber,
+          role: user.role,
         },
       });
     }
@@ -95,6 +107,7 @@ const login = async (req, res) => {
         phoneNumber: user.phoneNumber,
         gender: user.gender,
         birthDate: user.birthDate ? new Date(user.birthDate).toISOString().split('T')[0] : null,
+        role: user.role,
       },
     });
   } catch (error) {

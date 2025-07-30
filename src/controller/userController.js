@@ -97,9 +97,7 @@ const updateStudentProfile = async (req, res) => {
   try {
     const { user } = req;
     const id = user.id;
-    if (req.body.gender) {
-      return res.status(400).json({ message: 'Gender cannot be updated' });
-    }
+
     const updatedUser = await User.findByIdAndUpdate(id, req.body, {
       new: true,
       runValidators: true,
