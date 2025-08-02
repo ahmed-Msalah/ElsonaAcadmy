@@ -19,7 +19,12 @@ const createAccount = async (req, res) => {
     if (!name || !userName || !email || !password || !gender || !birthDate) {
       return res.status(400).json({ message: 'All fields are required' });
     }
-
+    const existingUser = await User.findOne({
+      $or: [{ email }, { userName }],
+    });
+    if (existingUser) {
+      return res.status(400).json({ message: 'Email or username already exists' });
+    }
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = new User({
@@ -38,6 +43,7 @@ const createAccount = async (req, res) => {
 
     res.status(201).json({
       message: 'Account created successfully',
+      token,
       data: {
         id: createdUser._id,
         name: createdUser.name,
