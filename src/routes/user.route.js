@@ -9,6 +9,7 @@ const {
   getStudentProgressReport,
   completeSubject,
 } = require(`../controller/userController.js`);
+const { getSubjectByName } = require('../controller/subjectController.js');
 const { getExamDetails, submitExam } = require('../controller/studentExamController.js');
 const { markLectureComplete } = require('../controller/lectureController.js');
 const { authenticateToken } = require('../middleware/authorized.middleware.js');
@@ -31,3 +32,5 @@ Router.get('/progress', authenticateToken, getStudentProgressReport);
 // اكتمال المادة بشرط تحقق كل المحاضرات والامتحان
 Router.route('/subjects/:subjectId/complete').post(authenticateToken, completeSubject);
 Router.route('/subjects').get(authenticateToken, getSubjectsWithLectures);
+Router.route('/subjects/name/:name').get(authenticateToken, getSubjectByName);
+module.exports = Router;

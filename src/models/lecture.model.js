@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const getDirectDownloadUrl = require('../service/directLink');
 const completionConditionSchema = new mongoose.Schema(
   {
     type: {
@@ -46,5 +46,17 @@ const lectureSchema = new mongoose.Schema(
   },
   { timestamps: true },
 );
+
+lectureSchema.pre('save', async function (next) {
+  if (this.isModified('contentUrl') || this.isNew) {
+    try {
+      this.contentUrl = await getDirectDownloadUrl(this.contentUrl, this.contentType);
+    } catch (err) {
+      console.error('Error converting contentUrl:', err.message);
+    }
+  }
+  next();
+});
+
 const Lecture = new mongoose.model('Lecture', lectureSchema);
 module.exports = Lecture;

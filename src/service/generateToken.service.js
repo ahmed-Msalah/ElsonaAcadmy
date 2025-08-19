@@ -1,12 +1,11 @@
 const jwt = require('jsonwebtoken');
 
+const JWT_SECRET = 'yhxqejiytxmderhv';
 
-const JWT_SECRET = "yhxqejiytxmderhv";
-
-module.exports.generateToken = (user) => {
+module.exports.generateToken = user => {
   return jwt.sign(
-    { id: user._id, email: user.email, role: user.role },
+    { id: user._id, email: user.email, role: user.role, userName: user.userName },
     JWT_SECRET,
-    { expiresIn: '30d' }
+    { expiresIn: '30d' },
   );
 };

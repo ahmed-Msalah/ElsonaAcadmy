@@ -26,6 +26,7 @@
     "mongoose": "^8.9.5",
     "mqtt": "^5.10.4",
     "node-cron": "^4.0.7",
+    "node-fetch": "^3.3.2",
     "nodemailer": "^6.10.0",
     "passport": "^0.7.0",
     "passport-facebook": "^3.0.0",

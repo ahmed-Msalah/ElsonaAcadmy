@@ -26,6 +26,7 @@ const {
   createSubject,
   updateSubject,
   deleteSubject,
+  getSubjectByName,
 } = require('../controller/subjectController.js');
 const {
   getAllLectures,
@@ -61,6 +62,7 @@ Router.route('/subjects')
 Router.route('/subjects/:id')
   .put(authenticateToken, isAdmin, updateSubject)
   .delete(authenticateToken, isAdmin, deleteSubject);
+
 //lectureRoutes
 Router.route('/lectures')
   .get(authenticateToken, isAdmin, getAllLectures)
