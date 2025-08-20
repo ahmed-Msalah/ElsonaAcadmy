@@ -9,11 +9,7 @@ const getAllSubjects = async (req, res) => {
     const subjects = await Subject.find();
     res.status(200).json({ status: 200, data: subjects });
   } catch (error) {
-<<<<<<< HEAD
     res.status(500).json({ status: 500, message: 'Server error', error: error.message });
-=======
-    res.status(500).json({ status: 500, message: 'Server Error', error });
->>>>>>> 8557badc69aa6bb3e2764f1bfd289d4b2111bcc0
   }
 };
 
@@ -104,11 +100,7 @@ const createSubject = async (req, res) => {
       data: subject,
     });
   } catch (error) {
-<<<<<<< HEAD
     res.status(500).json({ status: 500, message: 'Server error', error: error.message });
-=======
-    res.status(500).json({ status: 500, message: 'Server Error', error });
->>>>>>> 8557badc69aa6bb3e2764f1bfd289d4b2111bcc0
   }
 };
 
@@ -129,11 +121,7 @@ const updateSubject = async (req, res) => {
       data: updatedSubject,
     });
   } catch (error) {
-<<<<<<< HEAD
     res.status(500).json({ status: 500, message: 'Server error', error: error.message });
-=======
-    res.status(500).json({ status: 500, message: 'Server Error', error });
->>>>>>> 8557badc69aa6bb3e2764f1bfd289d4b2111bcc0
   }
 };
 
@@ -148,11 +136,7 @@ const deleteSubject = async (req, res) => {
 
     res.status(200).json({ status: 200, message: 'Subject deleted successfully' });
   } catch (error) {
-<<<<<<< HEAD
     res.status(500).json({ status: 500, message: 'Server error', error: error.message });
-=======
-    res.status(500).json({ status: 500, message: 'Server Error', error });
->>>>>>> 8557badc69aa6bb3e2764f1bfd289d4b2111bcc0
   }
 };
 
