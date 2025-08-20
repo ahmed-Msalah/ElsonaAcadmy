@@ -14,22 +14,14 @@ const getAllExams = async (req, res) => {
 
     res.status(200).json({ status: 200, data: examsWithCount });
   } catch (error) {
-<<<<<<< HEAD
     res.status(500).json({ status: 500, message: 'Server Error', error: error.message });
-=======
-    res.status(500).json({ status: 500, message: 'Server Error', error });
->>>>>>> 8557badc69aa6bb3e2764f1bfd289d4b2111bcc0
   }
 };
 
 const createExam = async (req, res) => {
   try {
-<<<<<<< HEAD
     const { title, description, totalMarks, timeLimit, questions, levelId, lectureId, subjectId } =
       req.body;
-=======
-    const { title, description, totalMarks, timeLimit, questions } = req.body;
->>>>>>> 8557badc69aa6bb3e2764f1bfd289d4b2111bcc0
 
     const exam = await Exam.create({
       title,
@@ -37,12 +29,9 @@ const createExam = async (req, res) => {
       totalMarks,
       timeLimit,
       questions,
-<<<<<<< HEAD
       levelId,
       lectureId,
       subjectId,
-=======
->>>>>>> 8557badc69aa6bb3e2764f1bfd289d4b2111bcc0
     });
 
     res.status(201).json({
@@ -59,11 +48,7 @@ const createExam = async (req, res) => {
       },
     });
   } catch (error) {
-<<<<<<< HEAD
     res.status(500).json({ status: 500, message: 'Server Error', error: error.message });
-=======
-    res.status(500).json({ status: 500, message: 'Server Error', error });
->>>>>>> 8557badc69aa6bb3e2764f1bfd289d4b2111bcc0
   }
 };
 
@@ -96,11 +81,7 @@ const updateExam = async (req, res) => {
       },
     });
   } catch (error) {
-<<<<<<< HEAD
     res.status(500).json({ status: 500, message: 'Server Error', error: error.message });
-=======
-    res.status(500).json({ status: 500, message: 'Server Error', error });
->>>>>>> 8557badc69aa6bb3e2764f1bfd289d4b2111bcc0
   }
 };
 
@@ -118,11 +99,7 @@ const deleteExam = async (req, res) => {
       message: 'Exam deleted successfully',
     });
   } catch (error) {
-<<<<<<< HEAD
     res.status(500).json({ status: 500, message: 'Server Error', error: error.message });
-=======
-    res.status(500).json({ status: 500, message: 'Server Error', error });
->>>>>>> 8557badc69aa6bb3e2764f1bfd289d4b2111bcc0
   }
 };
 
