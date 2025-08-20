@@ -230,7 +230,11 @@ const getSubjectsWithLectures = async (req, res) => {
     });
   } catch (error) {
     console.error('Error fetching subjects:', error);
+<<<<<<< HEAD
     res.status(500).json({ status: 500, message: 'Server error', error: error.message });
+=======
+    res.status(500).json({ status: 500, message: 'Server error', error });
+>>>>>>> 8557badc69aa6bb3e2764f1bfd289d4b2111bcc0
   }
 };
 const getStudentProgressReport = async (req, res) => {
@@ -310,7 +314,11 @@ const getStudentProgressReport = async (req, res) => {
       },
     });
   } catch (error) {
+<<<<<<< HEAD
     res.status(500).json({ status: 500, message: 'Server error', error: error.message });
+=======
+    res.status(500).json({ status: 500, message: 'Server error', error });
+>>>>>>> 8557badc69aa6bb3e2764f1bfd289d4b2111bcc0
   }
 };
 const completeSubject = async (req, res) => {
@@ -349,7 +357,11 @@ const completeSubject = async (req, res) => {
     }
   } catch (error) {
     console.error('Error completing subject:', error);
+<<<<<<< HEAD
     res.status(500).json({ status: 500, message: 'Server error', error: error.message });
+=======
+    res.status(500).json({ status: 500, message: 'Server error', error });
+>>>>>>> 8557badc69aa6bb3e2764f1bfd289d4b2111bcc0
   }
 };
 
