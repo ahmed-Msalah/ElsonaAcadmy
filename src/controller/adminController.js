@@ -1,4 +1,5 @@
 const User = require('../models/user.model');
+const bcrypt = require('bcrypt');
 const Level = require('../models/level.model');
 const Subject = require('../models/subject.model');
 const Lecture = require('../models/lecture.model');

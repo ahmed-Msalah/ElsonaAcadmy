@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const Level = require('../models/level.model');
 const Subject = require('../models/subject.model');
 const Lecture = require('../models/lecture.model');
+const CompletedLecture = require('../models/CompletedLecture.model');
+const CompletedSubject = require('../models/CompletedSubject.model');
 
 const getAllLevels = async (req, res) => {
   try {
@@ -71,17 +73,29 @@ const deleteLevel = async (req, res) => {
       return res.status(404).json({ status: 404, message: 'Level not found' });
     }
 
+
     // Find subjects related to the level
-    const subjects = await Subject.find({ level: levelId }).session(session);
+    const subjects = await Subject.find({ levelId: levelId }).session(session);
     const subjectIds = subjects.map(subject => subject._id);
 
-    // Delete lectures related to the subjects
+    // Find lectures related to the subjects
+    let lectureIds = [];
     if (subjectIds.length > 0) {
-      await Lecture.deleteMany({ subject: { $in: subjectIds } }).session(session);
+      const lectures = await Lecture.find({ subjectId: { $in: subjectIds } }).session(session);
+      lectureIds = lectures.map(lec => lec._id);
     }
 
-    // Delete subjects related to the level
-    await Subject.deleteMany({ level: levelId }).session(session);
+    // Delete CompletedLecture related to lectures
+    if (lectureIds.length > 0) {
+      await CompletedLecture.deleteMany({ lectureId: { $in: lectureIds } }).session(session);
+      await Lecture.deleteMany({ subjectId: { $in: subjectIds } }).session(session);
+    }
+
+    // Delete CompletedSubject related to subjects
+    if (subjectIds.length > 0) {
+      await CompletedSubject.deleteMany({ subjectId: { $in: subjectIds } }).session(session);
+      await Subject.deleteMany({ _id: { $in: subjectIds } }).session(session);
+    }
 
     // Delete the level
     await Level.findByIdAndDelete(levelId).session(session);
