@@ -1,5 +1,5 @@
 const Exam = require('../models/exam.model');
-
+const Lecture = require('../models/lecture.model');
 const getAllExams = async (req, res) => {
   try {
     const exams = await Exam.find();
@@ -33,6 +33,15 @@ const createExam = async (req, res) => {
       lectureId,
       subjectId,
     });
+
+    if (lectureId) {
+      await Lecture.findByIdAndUpdate(lectureId, {
+        completionCondition: {
+          type: 'exam',
+          examId: exam._id,
+        },
+      });
+    }
 
     res.status(201).json({
       status: 201,

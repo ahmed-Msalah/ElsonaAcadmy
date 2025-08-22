@@ -4,7 +4,8 @@ const completionConditionSchema = new mongoose.Schema(
   {
     type: {
       type: String,
-      enum: ['exam', 'auto'], // ✅ دعم النوعين
+      enum: ['exam', 'auto'],
+      default: 'auto', // ✅ دعم النوعين
       required: true,
     },
     examId: {
