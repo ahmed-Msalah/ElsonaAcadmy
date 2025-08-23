@@ -5,14 +5,14 @@ const completionConditionSchema = new mongoose.Schema(
     type: {
       type: String,
       enum: ['exam', 'auto'],
-      default: 'auto', // ✅ دعم النوعين
+      default: 'auto',
       required: true,
     },
     examId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Exam',
       required: function () {
-        return this.type === 'exam'; // ✅ مطلوب فقط لو النوع "exam"
+        return this.type === 'exam';
       },
     },
   },

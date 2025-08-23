@@ -115,9 +115,44 @@ const deleteExam = async (req, res) => {
   }
 };
 
+const getExamById = async (req, res) => {
+  try {
+    const id = req.params.id;
+    let exam = null;
+
+    exam = await Exam.findOne({ lectureId: id });
+    if (!exam) {
+      exam = await Exam.findOne({ subjectId: id });
+    }
+
+    if (!exam) {
+      return res.status(404).json({ status: 404, message: 'Exam not found for this id.' });
+    }
+
+    res.status(200).json({
+      status: 200,
+      data: {
+        id: exam._id,
+        title: exam.title,
+        description: exam.description,
+        totalMarks: exam.totalMarks,
+        timeLimit: exam.timeLimit,
+        levelId: exam.levelId,
+        lectureId: exam.lectureId,
+        subjectId: exam.subjectId,
+        questions: exam.questions,
+        createdAt: exam.createdAt,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ status: 500, message: 'Server Error', error: error.message });
+  }
+};
+
 module.exports = {
   getAllExams,
   createExam,
   updateExam,
   deleteExam,
+  getExamById,
 };

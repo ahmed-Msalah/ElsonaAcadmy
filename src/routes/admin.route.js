@@ -20,6 +20,7 @@ const {
   createExam,
   updateExam,
   deleteExam,
+  getExamById,
 } = require('../controller/examController.js');
 const {
   getAllSubjects,
@@ -53,7 +54,8 @@ Router.route('/exams')
   .post(authenticateToken, isAdmin, createExam);
 Router.route('/exams/:id')
   .put(authenticateToken, isAdmin, updateExam)
-  .delete(authenticateToken, isAdmin, deleteExam);
+  .delete(authenticateToken, isAdmin, deleteExam)
+  .get(authenticateToken, isAdmin, getExamById);
 
 //subjectRoutes
 Router.route('/subjects')
