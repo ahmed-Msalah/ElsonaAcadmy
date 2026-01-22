@@ -42,7 +42,7 @@ const lectureSchema = new mongoose.Schema(
     },
     completionCondition: {
       type: completionConditionSchema,
-      required: false, // ✅ لأنها optional في حالة auto
+      required: false,
     },
   },
   { timestamps: true },

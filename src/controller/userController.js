@@ -53,7 +53,7 @@ const updateUserById = async (req, res) => {
     res.status(500).json({ message: 'Server error', EROOOOR: error.message });
   }
 };
-//////////////////////(student endpoint)////////////////////////////////
+// student endpointssss
 const getStudentProfile = async (req, res) => {
   try {
     const userId = req.user.id;

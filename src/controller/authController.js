@@ -129,16 +129,13 @@ const requestPasswordReset = async (req, res) => {
     const user = await User.findOne({ email });
     if (!user) return res.status(404).json({ message: 'Student not found' });
 
-    // Generate a 6-digit reset code
     const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
     const resetCodeExpires = new Date(Date.now() + 10 * 60 * 1000); // Code expires in 10 minutes
 
-    // Store usedr document
     user.resetPasswordCode = resetCode;
     user.resetPasswordExpires = resetCodeExpires;
     await user.save({ validateBeforeSave: false });
 
-    // Send the code via email
     await sendResetCodeEmail(user.email, user.userName, resetCode);
 
     return res

@@ -42,10 +42,13 @@ const submitExam = async (req, res) => {
     const exam = await Exam.findById(examId).lean();
     if (!exam) return res.status(404).json({ status: 404, message: 'Exam not found' });
 
-    // Prevent multiple attempts (optional)
     const prevAttempt = await ExamAttempt.findOne({ userId, examId });
-    if (prevAttempt)
-      return res.status(400).json({ status: 400, message: 'Exam already attempted' });
+
+    if (prevAttempt && prevAttempt.score >= exam.totalMarks * 0.5) {
+      return res
+        .status(400)
+        .json({ status: 400, message: 'You have already passed this exam and cannot retake it.' });
+    }
 
     let score = 0;
     const correctAnswers = exam.questions.map((q, idx) => {
@@ -59,8 +62,7 @@ const submitExam = async (req, res) => {
       };
     });
 
-    // Save attempt
-    await ExamAttempt.create({
+    const attemptData = {
       userId,
       examId,
       score: Math.round(score),
@@ -71,14 +73,20 @@ const submitExam = async (req, res) => {
         correctOptionIndex: ans.correctOptionIndex,
         isCorrect: ans.isCorrect,
       })),
-    });
+    };
+
+    if (prevAttempt) {
+      await ExamAttempt.findByIdAndUpdate(prevAttempt._id, attemptData);
+    } else {
+      await ExamAttempt.create(attemptData);
+    }
 
     res.status(200).json({
       status: 200,
       data: {
         score: Math.round(score),
         totalMarks: exam.totalMarks,
-        passed: score >= exam.totalMarks * 0.5, // Example: pass if >= 50%
+        passed: score >= exam.totalMarks * 0.5,
         correctAnswers,
       },
     });

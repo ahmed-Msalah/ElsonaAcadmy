@@ -61,14 +61,11 @@ const examSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-// Add a pre-validation hook to ensure data integrity for exam associations.
 examSchema.pre('validate', function (next) {
-  // Rule: If an exam is for a specific lecture, it must also be linked to a subject.
   if (this.lectureId && !this.subjectId) {
     return next(new Error('An exam for a specific lecture must also be linked to a subject.'));
   }
 
-  // If all checks pass, proceed with saving.
   next();
 });
 

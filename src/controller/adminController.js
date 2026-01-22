@@ -8,7 +8,6 @@ const Exam = require('../models/exam.model');
 const ExamAttempt = require('../models/ExamAttempt.model');
 const CompletedSubject = require('../models/CompletedSubject.model');
 
-// Get All Admins
 const getAllAdmins = async (req, res) => {
   try {
     const admins = await User.find({ role: 'admin' }).select('-password');
@@ -29,12 +28,10 @@ const getAllAdmins = async (req, res) => {
   }
 };
 
-// Create New Admin
 const createAdmin = async (req, res) => {
   try {
     const { name, email, password, phoneNumber, userName, gender } = req.body;
 
-    // Check if email exists
     const exists = await User.findOne({ email });
     if (exists) {
       return res.status(400).json({ status: 400, message: 'Email already exists' });
@@ -70,11 +67,9 @@ const createAdmin = async (req, res) => {
   }
 };
 
-// Delete Admin
 const deleteAdmin = async (req, res) => {
   try {
     const adminId = req.params.adminId;
-    // تحقق هل هذا هو أول أدمن (سوبر أدمن)
     const firstAdmin = await User.findOne({ role: 'admin' }).sort({ createdAt: 1 });
     if (firstAdmin && firstAdmin._id.toString() === adminId) {
       return res.status(403).json({ status: 403, message: 'Cannot delete Super Admin' });
@@ -94,7 +89,6 @@ const getStudentDetailedReport = async (req, res) => {
   try {
     const studentId = req.params.studentId;
 
-    // Get student basic info
     const student = await User.findById(studentId)
       .populate({ path: 'currentLevelId', select: 'levelNumber' })
       .select('name email currentLevelId');
@@ -103,23 +97,19 @@ const getStudentDetailedReport = async (req, res) => {
     const levelId = student.currentLevelId;
     const levelNumber = levelId.levelNumber;
 
-    // Get subjects in current level
     const subjects = await Subject.find({ levelId }).lean();
 
-    // Get completed lectures for student
     const completedLectures = await CompletedLecture.find({ userId: studentId });
     const completedLectureMap = {};
     completedLectures.forEach(cl => {
       completedLectureMap[cl.lectureId.toString()] = cl.createdAt;
     });
 
-    // Prepare subject reports
     let totalLectures = 0;
     let totalCompletedLectures = 0;
 
     const subjectsReport = await Promise.all(
       subjects.map(async subject => {
-        // Lectures
         const lectures = await Lecture.find({ subjectId: subject._id }).lean();
         totalLectures += lectures.length;
 
@@ -134,7 +124,6 @@ const getStudentDetailedReport = async (req, res) => {
           };
         });
 
-        // Exams
         const exams = await Exam.find({ subjectId: subject._id }).lean();
         const examResults = await Promise.all(
           exams.map(async exam => {
@@ -171,7 +160,6 @@ const getStudentDetailedReport = async (req, res) => {
       }),
     );
 
-    // Calculate overall progress
     const overallProgress =
       totalLectures > 0 ? Math.round((totalCompletedLectures / totalLectures) * 100) : 0;
 
@@ -195,7 +183,6 @@ const getStudentDetailedReport = async (req, res) => {
 
 const getAllStudentsProgressReports = async (req, res) => {
   try {
-    // Get all students
     const students = await User.find({ role: 'student' })
       .populate({
         path: 'currentLevelId',
@@ -208,15 +195,12 @@ const getAllStudentsProgressReports = async (req, res) => {
         const levelId = student.currentLevelId?._id || student.currentLevelId;
         const levelNumber = student.currentLevelId?.levelNumber || null;
 
-        // Subjects in current level
         const subjects = await Subject.find({ levelId }).lean();
         const totalSubjects = subjects.length;
 
-        // Completed subjects
         const completedSubjects = await CompletedSubject.find({ userId: student._id });
         const completedSubjectsCount = completedSubjects.length;
 
-        // Exams attempts for this student
         const examAttempts = await ExamAttempt.find({ userId: student._id });
         const scores = examAttempts.map(a => a.score);
         const averageScore =
@@ -224,7 +208,6 @@ const getAllStudentsProgressReports = async (req, res) => {
             ? Math.round(scores.reduce((sum, s) => sum + s, 0) / scores.length)
             : null;
 
-        // Overall progress: نسبة المواد المكتملة من إجمالي المواد
         const overallProgress =
           totalSubjects > 0 ? Math.round((completedSubjectsCount / totalSubjects) * 100) : 0;
 
